@@ -48,6 +48,14 @@ class Color:
         assert len(hexcode) == 6
         return cls(*tuple(int(hexcode[i:i + 2], 16) for i in (0, 2, 4)))
 
+    @classmethod
+    def black(cls):
+        return cls(0, 0, 0)
+
+    @classmethod
+    def white(cls):
+        return cls(255, 255, 255)
+
     # ==================================================================
     # Methods
 
