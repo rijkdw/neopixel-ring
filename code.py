@@ -1,21 +1,25 @@
 import time
 import board
 import neopixel
-import random
-from color import Color
+import json
 
+from src.color import Color
+from src.image import Image
 
-pixels = neopixel.NeoPixel(board.A0, 24, brightness=0.1, auto_write=False)
-pixels.fill(Color(200, 50, 1).rgb)
+# =================================================================================
+# Set up the board
+
+NUM_PIXELS = 64
+PIN = board.A0
+
+pixels = neopixel.NeoPixel(PIN, NUM_PIXELS, brightness=0.03, auto_write=False)
+pixels.fill(Color(0, 200, 0).rgb)
 pixels.show()
 
-colors = Color.rainbow(n=1000)
+# =================================================================================
+# Image load
 
-t = 0
-while True:
-    t += 1
-    for i in range(24):
-        pixels[i] = colors[t%1000].rgb
+Image.from_json_file("assets/dino.json").show_on_pixels(pixels)
 
-    pixels.show()
-    time.sleep(0.01)
+# =================================================================================
+# Eye blinking

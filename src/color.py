@@ -1,3 +1,6 @@
+import src.utils as utils
+
+
 class Color:
 
     # ==================================================================
@@ -48,12 +51,21 @@ class Color:
     # ==================================================================
     # Methods
 
-    def scaled(self, scalar):
+    def scaled(self, scalar) -> 'Color':
         return Color(
             scalar * self.r,
             scalar * self.g,
             scalar * self.b
         )
+
+    def to_8bit(self) -> 'Color':
+        r, g, b = self.rgb
+        rg_values = [int(x, 16) for x in '0 24 49 6d 92 b6 db ff'.split()]
+        b_values = [int(x, 16) for x in '0 55 aa ff'.split()]
+        ra = min(rg_values, key=lambda x: abs(x-r))
+        ga = min(rg_values, key=lambda x: abs(x-g))
+        ba = min(b_values, key=lambda x: abs(x-b))
+        return Color.from_rgb(ra, ga, ba)
 
     def to_rgb(self):
         return self.r, self.g, self.b
@@ -85,6 +97,15 @@ class Color:
     @property
     def hsv(self):
         return self.h, self.s, self.v
+
+    @property
+    def hex(self):
+        ra, ga, ba = tuple(utils.rjust(str(hex(x)).replace('0x', ''), width=2, char='0') for x in self.rgb)
+        return '#' + ra + ga + ba
+
+    def block(self):
+        r, g, b = self.rgb
+        return "\033[38;2;{};{};{}m{} \033[38;2;255;255;255m".format(r, g, b, 'H')
 
     def __str__(self):
         return f"{self.rgb}"
